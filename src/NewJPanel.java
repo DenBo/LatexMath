@@ -9,7 +9,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -21,6 +24,7 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
     BufferedImage b = null;
     Toolkit kit = Toolkit.getDefaultToolkit();
     final Clipboard clipboard = kit.getSystemClipboard();
+    File defaultPath = null;
 
     /**
      * Creates new form NewJPanel
@@ -132,22 +136,31 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
     }//GEN-LAST:event_renderTexActionPerformed
 
     private void exportGraphicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportGraphicsActionPerformed
+        File f = null;
         if (b != null) {
-            File f = new File("graphics-0.png");
-            for (int i = 0;; i++) {
-                if (f.exists()) {
-                    f = new File("graphics-" + i + ".png");
-                } else {
-                    break;
+            if (defaultPath == null) {
+            JFileChooser chooser = new JFileChooser();
+                chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.showOpenDialog(null);
+                f = chooser.getSelectedFile();
+                defaultPath = f;
+                try {
+                    exportImage(defaultPath);
+                } catch (IOException ex) {
+                    Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            try {
-                File outputfile = new File(f.getName());
-                ImageIO.write(b, "png", outputfile);
-                NewJFrame.msgBar.setText("Graphics exported as " + f.getName() + ".");
-            } catch (IOException e) {
-                NewJFrame.msgBar.setText(e.getMessage());
+            else {
+                try {
+                    exportImage(defaultPath);
+                } catch (IOException ex) {
+                    Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        }
+        else {
+            NewJFrame.msgBar.setText("Nothing to export!");
         }
     }//GEN-LAST:event_exportGraphicsActionPerformed
 
@@ -174,4 +187,25 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
     private javax.swing.JButton renderTex;
     private javax.swing.JSlider sizeSlider;
     // End of variables declaration//GEN-END:variables
+
+    private void exportImage(File f) throws IOException {
+        
+        //Ob prvem exportu vprasa za pot izvoza. To se nastavi kot default path.
+        //Mozna razsiritev: Dodaj gumb v orodni vrstici: "Nastavi default export path."
+            f = new File(defaultPath + "/graphics-0.png");
+            for (int i = 0;; i++) {
+                if (f.exists()) {
+                    f = new File(defaultPath + "/graphics-" + i + ".png");
+                } else {
+                    break;
+                }
+            }
+            try {
+                File outputfile = new File(f.getAbsolutePath());
+                ImageIO.write(b, "png", outputfile);
+                NewJFrame.msgBar.setText("Graphics exported as " + f.getName() + ".");
+            } catch (IOException e) {
+                NewJFrame.msgBar.setText(e.getMessage());
+            }
+          }
 }
