@@ -9,7 +9,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -21,6 +24,7 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
     BufferedImage b = null;
     Toolkit kit = Toolkit.getDefaultToolkit();
     final Clipboard clipboard = kit.getSystemClipboard();
+    File defaultPath = null;
 
     /**
      * Creates new form NewJPanel
@@ -63,24 +67,25 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
         gfxToClipboard = new javax.swing.JButton();
         sizeSlider = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        renderTex.setText("render");
+        renderTex.setText("Render");
         renderTex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 renderTexActionPerformed(evt);
             }
         });
 
-        exportGraphics.setText("export");
+        exportGraphics.setText("Export");
         exportGraphics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportGraphicsActionPerformed(evt);
             }
         });
 
-        gfxToClipboard.setText("to clipboard");
+        gfxToClipboard.setText("To clipboard");
         gfxToClipboard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gfxToClipboardActionPerformed(evt);
@@ -98,6 +103,8 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
 
         jLabel1.setText("Size: 40");
 
+        jCheckBox1.setText("Set export path");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,24 +112,36 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(renderTex)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exportGraphics)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(gfxToClipboard)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sizeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jCheckBox1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(exportGraphics)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(gfxToClipboard)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sizeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(134, 134, 134))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(renderTex, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(exportGraphics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(gfxToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sizeSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 277, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(renderTex, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(exportGraphics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(gfxToClipboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sizeSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
+                .addGap(0, 248, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -132,22 +151,52 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
     }//GEN-LAST:event_renderTexActionPerformed
 
     private void exportGraphicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportGraphicsActionPerformed
+        File f = null;
+        JFileChooser chooser = new JFileChooser();
         if (b != null) {
-            File f = new File("graphics-0.png");
-            for (int i = 0;; i++) {
-                if (f.exists()) {
-                    f = new File("graphics-" + i + ".png");
-                } else {
-                    break;
+           if (jCheckBox1.isSelected()) {
+                if (defaultPath == null) {
+                 
+                
+               
+          
+                    chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    int returnVal = chooser.showOpenDialog(null);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        f = chooser.getSelectedFile();
+                        defaultPath = f;
+                    } else {
+                        defaultPath = null;
+                        NewJFrame.msgBar.setText("Setting export path aborted by user.!");
+                        jCheckBox1.setSelected(false);
+                    }
+                    try {
+                        exportImage(defaultPath);
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            }
-            try {
-                File outputfile = new File(f.getName());
-                ImageIO.write(b, "png", outputfile);
-                NewJFrame.msgBar.setText("Graphics exported as " + f.getName() + ".");
-            } catch (IOException e) {
-                NewJFrame.msgBar.setText(e.getMessage());
-            }
+                else {
+                    try {
+                        exportImage(defaultPath);
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+           }
+           else {
+                try {
+                    defaultPath = null;
+                    
+                    exportImage(defaultPath);
+                } catch (IOException ex) {
+                    Logger.getLogger(NewJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+           }
+        }
+        else {
+            NewJFrame.msgBar.setText("Nothing to export!");
         }
     }//GEN-LAST:event_exportGraphicsActionPerformed
 
@@ -167,11 +216,41 @@ public class NewJPanel extends javax.swing.JPanel implements ClipboardOwner {
     private void sizeSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sizeSliderStateChanged
         jLabel1.setText(String.format("Size: %d", sizeSlider.getValue()));
     }//GEN-LAST:event_sizeSliderStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exportGraphics;
     private javax.swing.JButton gfxToClipboard;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton renderTex;
     private javax.swing.JSlider sizeSlider;
     // End of variables declaration//GEN-END:variables
+
+    private void exportImage(File f) throws IOException {
+        
+        //Ob prvem exportu vprasa za pot izvoza. To se nastavi kot default path.
+        //Mozna razsiritev: Dodaj gumb v orodni vrstici: "Nastavi default export path."
+            if (defaultPath == null) {
+                f = new File("graphics-0.png");
+                }
+            else {
+                f = new File(defaultPath + "/graphics-0.png");
+            }
+            for (int i = 0;; i++) {
+                if (f.exists()) {
+                    if (defaultPath == null) {
+                    f = new File("graphics-" + i + ".png");
+                    } else f = new File(defaultPath + "/graphics-" + i + ".png");
+                } else {
+                    break;
+                }
+            }
+            try {
+                File outputfile = new File(f.getAbsolutePath());
+                ImageIO.write(b, "png", outputfile);
+                NewJFrame.msgBar.setText("Graphics exported as " + f.getName() + ".");
+            } catch (IOException e) {
+                NewJFrame.msgBar.setText(e.getMessage());
+            }
+          }
 }
