@@ -1,6 +1,14 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.InputMap;
+import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.text.DefaultEditorKit;
 
 /*
  * To change this template, choose Tools | Templates and open the template in
@@ -10,15 +18,18 @@ import java.awt.event.ActionListener;
  *
  * @author Terraviper-5
  */
-public class NewJFrame extends javax.swing.JFrame {
+public class GraphicUserInterface extends javax.swing.JFrame {
 
     /**
      * Creates new form NewJFrame
      */
+    static final String OS = System.getProperty("os.name").toLowerCase();
     protected static javax.swing.JButton confirmMatrix = new javax.swing.JButton();
+    static final java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
-    public NewJFrame() {
+    public GraphicUserInterface() {
         initComponents();
+        centerAllDialogs();
     }
 
     /**
@@ -49,8 +60,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        generalDialog = new javax.swing.JDialog();
+        matrixAlignmentButtonGroup = new javax.swing.ButtonGroup();
+        parenthesesTip = new javax.swing.JDialog();
         jLabel6 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -63,7 +74,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jRadioButton8 = new javax.swing.JRadioButton();
         jRadioButton10 = new javax.swing.JRadioButton();
         insertDotsTex = new javax.swing.JButton();
-        buttonGroup2 = new javax.swing.ButtonGroup();
+        dotsButtonGroup = new javax.swing.ButtonGroup();
         matrixBuilder = new javax.swing.JDialog();
         integralDialog = new javax.swing.JDialog();
         jLabel9 = new javax.swing.JLabel();
@@ -84,6 +95,10 @@ public class NewJFrame extends javax.swing.JFrame {
         jTextField9 = new javax.swing.JTextField();
         jTextField10 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
+        setExportPathDialog = new javax.swing.JDialog();
+        exportPathField = new javax.swing.JTextField();
+        confirmExportPathButton = new javax.swing.JButton();
+        browseExportPathButton = new javax.swing.JButton();
         msgBar = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
@@ -182,7 +197,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         textPreview = new javax.swing.JTextArea();
-        newJPanel2 = new NewJPanel();
+        texDrawSurface1 = new TexDrawSurface();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         sineTex = new javax.swing.JMenuItem();
@@ -209,6 +224,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
+        settingsMenu = new javax.swing.JMenu();
+        openExportPathSettings = new javax.swing.JMenuItem();
 
         matrixPropertiesPrompt.setTitle("array parameters");
         matrixPropertiesPrompt.setAlwaysOnTop(true);
@@ -229,14 +246,14 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Alignment of columns and separators");
 
-        buttonGroup1.add(jRadioButton1);
+        matrixAlignmentButtonGroup.add(jRadioButton1);
         jRadioButton1.setText("left");
 
-        buttonGroup1.add(jRadioButton2);
+        matrixAlignmentButtonGroup.add(jRadioButton2);
         jRadioButton2.setSelected(true);
         jRadioButton2.setText("center");
 
-        buttonGroup1.add(jRadioButton3);
+        matrixAlignmentButtonGroup.add(jRadioButton3);
         jRadioButton3.setText("right");
 
         jLabel5.setText("Example: c|l|r (center| left | right)");
@@ -328,8 +345,8 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        generalDialog.setMinimumSize(new java.awt.Dimension(263, 158));
-        generalDialog.setResizable(false);
+        parenthesesTip.setMinimumSize(new java.awt.Dimension(263, 158));
+        parenthesesTip.setResizable(false);
 
         jLabel6.setText("jLabel6");
 
@@ -344,31 +361,31 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel8.setText("jLabel8");
 
-        javax.swing.GroupLayout generalDialogLayout = new javax.swing.GroupLayout(generalDialog.getContentPane());
-        generalDialog.getContentPane().setLayout(generalDialogLayout);
-        generalDialogLayout.setHorizontalGroup(
-            generalDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generalDialogLayout.createSequentialGroup()
-                .addGroup(generalDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(generalDialogLayout.createSequentialGroup()
-                        .addGroup(generalDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(generalDialogLayout.createSequentialGroup()
+        javax.swing.GroupLayout parenthesesTipLayout = new javax.swing.GroupLayout(parenthesesTip.getContentPane());
+        parenthesesTip.getContentPane().setLayout(parenthesesTipLayout);
+        parenthesesTipLayout.setHorizontalGroup(
+            parenthesesTipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(parenthesesTipLayout.createSequentialGroup()
+                .addGroup(parenthesesTipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(parenthesesTipLayout.createSequentialGroup()
+                        .addGroup(parenthesesTipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(parenthesesTipLayout.createSequentialGroup()
                                 .addGap(91, 91, 91)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(generalDialogLayout.createSequentialGroup()
+                            .addGroup(parenthesesTipLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel8)))
                         .addGap(0, 81, Short.MAX_VALUE))
-                    .addGroup(generalDialogLayout.createSequentialGroup()
+                    .addGroup(parenthesesTipLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(generalDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(parenthesesTipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
-        generalDialogLayout.setVerticalGroup(
-            generalDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generalDialogLayout.createSequentialGroup()
+        parenthesesTipLayout.setVerticalGroup(
+            parenthesesTipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(parenthesesTipLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -383,20 +400,32 @@ public class NewJFrame extends javax.swing.JFrame {
         dotsDialog.setMinimumSize(new java.awt.Dimension(118, 218));
         dotsDialog.setResizable(false);
 
+        dotsButtonGroup.add(jRadioButton4);
         jRadioButton4.setText("horizontal, low");
 
+        dotsButtonGroup.add(jRadioButton5);
         jRadioButton5.setText("vertical");
 
+        dotsButtonGroup.add(jRadioButton6);
         jRadioButton6.setText("horizontal, mid");
 
+        dotsButtonGroup.add(jRadioButton7);
         jRadioButton7.setText("falling");
 
+        dotsButtonGroup.add(jRadioButton8);
         jRadioButton8.setText("raising");
 
+        dotsButtonGroup.add(jRadioButton10);
+        jRadioButton10.setSelected(true);
         jRadioButton10.setText("generic dots");
         jRadioButton10.setToolTipText("generic dots, to be used in text (outside formulae as well). It automatically manages whitespaces before and after itself according to the context, it's a higher level command.");
 
         insertDotsTex.setText("insert");
+        insertDotsTex.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertDotsTexActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout dotsDialogLayout = new javax.swing.GroupLayout(dotsDialog.getContentPane());
         dotsDialog.getContentPane().setLayout(dotsDialogLayout);
@@ -448,9 +477,7 @@ public class NewJFrame extends javax.swing.JFrame {
         );
 
         integralDialog.setAlwaysOnTop(true);
-        integralDialog.setMaximumSize(new java.awt.Dimension(296, 240));
         integralDialog.setMinimumSize(new java.awt.Dimension(296, 240));
-        integralDialog.setPreferredSize(new java.awt.Dimension(296, 240));
         integralDialog.setResizable(false);
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/intDialogue1.png"))); // NOI18N
@@ -528,9 +555,7 @@ public class NewJFrame extends javax.swing.JFrame {
         );
 
         fractionDialog.setAlwaysOnTop(true);
-        fractionDialog.setMaximumSize(new java.awt.Dimension(2147483647, 190));
         fractionDialog.setMinimumSize(new java.awt.Dimension(400, 190));
-        fractionDialog.setPreferredSize(new java.awt.Dimension(400, 190));
 
         jButton4.setText("proceed");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -571,7 +596,6 @@ public class NewJFrame extends javax.swing.JFrame {
         );
 
         sumDialog.setMinimumSize(new java.awt.Dimension(194, 186));
-        sumDialog.setPreferredSize(new java.awt.Dimension(194, 186));
 
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sum.png"))); // NOI18N
         jLabel11.setText("jLabel11");
@@ -615,6 +639,52 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        setExportPathDialog.setTitle("Export Path Settings");
+        setExportPathDialog.setMaximumSize(new java.awt.Dimension(430, 120));
+        setExportPathDialog.setMinimumSize(new java.awt.Dimension(430, 120));
+        setExportPathDialog.setPreferredSize(new java.awt.Dimension(430, 120));
+
+        confirmExportPathButton.setText("Ok");
+        confirmExportPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmExportPathButtonActionPerformed(evt);
+            }
+        });
+
+        browseExportPathButton.setText("Browse");
+        browseExportPathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseExportPathButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout setExportPathDialogLayout = new javax.swing.GroupLayout(setExportPathDialog.getContentPane());
+        setExportPathDialog.getContentPane().setLayout(setExportPathDialogLayout);
+        setExportPathDialogLayout.setHorizontalGroup(
+            setExportPathDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(setExportPathDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(setExportPathDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exportPathField)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, setExportPathDialogLayout.createSequentialGroup()
+                        .addGap(0, 262, Short.MAX_VALUE)
+                        .addComponent(browseExportPathButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(confirmExportPathButton)))
+                .addContainerGap())
+        );
+        setExportPathDialogLayout.setVerticalGroup(
+            setExportPathDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(setExportPathDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(exportPathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(setExportPathDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(confirmExportPathButton)
+                    .addComponent(browseExportPathButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1793,7 +1863,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(textPreview);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
-        jSplitPane1.setRightComponent(newJPanel2);
+        jSplitPane1.setRightComponent(texDrawSurface1);
 
         jMenu5.setText("Common functions");
 
@@ -1823,7 +1893,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu6.setText("Styles");
+        jMenu6.setText("Normal Text Styles");
 
         nmlTxtMathTex.setText("normal text");
         nmlTxtMathTex.addActionListener(new java.awt.event.ActionListener() {
@@ -1935,7 +2005,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Whitespace");
+        jMenu2.setText("Insert Whitespace");
 
         jMenuItem12.setText("tiny");
         jMenuItem12.setToolTipText("3/18 of a \"quad\"");
@@ -1983,6 +2053,18 @@ public class NewJFrame extends javax.swing.JFrame {
         jMenu2.add(jMenuItem15);
 
         jMenuBar1.add(jMenu2);
+
+        settingsMenu.setText("Settings");
+
+        openExportPathSettings.setText("Set Export Path");
+        openExportPathSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openExportPathSettingsActionPerformed(evt);
+            }
+        });
+        settingsMenu.add(openExportPathSettings);
+
+        jMenuBar1.add(settingsMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -2150,11 +2232,11 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel6.setText("For one sided brackets, use dot \".\", like:");
         jLabel7.setText("\\left\\{ CONTENTS \\right.");
         jLabel8.setText("\\left. CONTENTS \\right\\}");
-        generalDialog.setVisible(true);
+        parenthesesTip.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        generalDialog.setVisible(false);
+        parenthesesTip.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void nablaTexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nablaTexActionPerformed
@@ -2423,15 +2505,15 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         if (jTextField5.getText().isEmpty() || jTextField4.getText().isEmpty()) {
-            insertChars("\\int \\! "+jTextField2.getText()+" \\, \\mathrm{d} "+jTextField3.getText());
+            insertChars("\\int \\! " + jTextField2.getText() + " \\, \\mathrm{d} " + jTextField3.getText());
         } else {
-            insertChars("\\int_{"+jTextField5.getText()+"}^{"+jTextField4.getText()+"} \\! "+jTextField2.getText()+" \\, \\mathrm{d} "+jTextField3.getText());
+            insertChars("\\int_{" + jTextField5.getText() + "}^{" + jTextField4.getText() + "} \\! " + jTextField2.getText() + " \\, \\mathrm{d} " + jTextField3.getText());
         }
         integralDialog.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        insertChars("\\frac{"+jTextField6.getText()+"}{"+jTextField7.getText()+"}");
+        insertChars("\\frac{" + jTextField6.getText() + "}{" + jTextField7.getText() + "}");
         fractionDialog.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -2480,15 +2562,71 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cupTexActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        insertChars("\\displaystyle\\sum\\limits_{"+jTextField9.getText()+"}^{"+jTextField8.getText()+"} "+jTextField10.getText());
+        insertChars("\\displaystyle\\sum\\limits_{" + jTextField9.getText() + "}^{" + jTextField8.getText() + "} " + jTextField10.getText());
         sumDialog.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void openExportPathSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openExportPathSettingsActionPerformed
+        this.setExportPathDialog.setVisible(true);
+    }//GEN-LAST:event_openExportPathSettingsActionPerformed
+
+    private void browseExportPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseExportPathButtonActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogType(1);
+        chooser.setFileSelectionMode(1);
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == 0) {
+            try {
+                this.exportPathField.setText(chooser.getSelectedFile().getCanonicalPath());
+            } catch (IOException ex) {
+                msgBar.setText(ex.getMessage());
+            }
+        } else {
+            msgBar.setText("Setting export path aborted by user.");
+        }
+    }//GEN-LAST:event_browseExportPathButtonActionPerformed
+
+    private void confirmExportPathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmExportPathButtonActionPerformed
+        if (this.exportPathField.getText().equals("")) {
+            TexDrawSurface.defaultPath = null;
+            msgBar.setText("Export path set to working dir.");
+            this.setExportPathDialog.setVisible(false);
+        } else {
+            File f = new File(this.exportPathField.getText());
+            if (f.isDirectory()) {
+                TexDrawSurface.defaultPath = f;
+                msgBar.setText("Export path set.");
+                this.setExportPathDialog.setVisible(false);
+            } else {
+                msgBar.setText("Invalid path entered.");
+            }
+        }
+    }//GEN-LAST:event_confirmExportPathButtonActionPerformed
+
+    private void insertDotsTexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertDotsTexActionPerformed
+        if (jRadioButton4.isSelected()) {
+            insertChars("\\ldots");
+        } else if (jRadioButton5.isSelected()) {
+            insertChars("\\vdots");
+        } else if (jRadioButton6.isSelected()) {
+            insertChars("\\cdots");
+        } else if (jRadioButton7.isSelected()) {
+            insertChars("\\ddots");
+        } else if (jRadioButton8.isSelected()) {
+            insertChars("\\iddots");
+        } else {
+            insertChars("\\dots");
+        }
+        dotsDialog.setVisible(false);
+    }//GEN-LAST:event_insertDotsTexActionPerformed
+
+    // General purpose method for inserting text.
     protected static void insertChars(String sequence) {
         textPreview.replaceSelection(sequence);
         textPreview.repaint();
     }
 
+    // General purpose method for inderting prefix and postfix text.
     protected static void wrapAround(String sequence1, String sequence2) {
         String temp = textPreview.getSelectedText();
         insertChars(sequence1 + temp + sequence2);
@@ -2515,7 +2653,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GraphicUserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -2523,10 +2661,9 @@ public class NewJFrame extends javax.swing.JFrame {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
-                new NewJFrame().setVisible(true);
+                new GraphicUserInterface().setVisible(true);
             }
         });
 
@@ -2538,6 +2675,57 @@ public class NewJFrame extends javax.swing.JFrame {
                 matrixBuilder.setVisible(false);
             }
         });
+
+        // Restore lost copy, pase, cut and select all functionalities on Mac.
+        if (isMac()) {
+            InputMap im = (InputMap) UIManager.get("TextArea.focusInputMap");
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+            InputMap im2 = (InputMap) UIManager.get("TextField.focusInputMap");
+            im2.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+            im2.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+            im2.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+            im2.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+        }
+    }
+
+    public static boolean isWindows() {
+
+        return (OS.indexOf("win") >= 0);
+
+    }
+
+    public static boolean isMac() {
+
+        return (OS.indexOf("mac") >= 0);
+
+    }
+
+    public static boolean isUnix() {
+
+        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+
+    }
+
+    public static boolean isSolaris() {
+
+        return (OS.indexOf("sunos") >= 0);
+
+    }
+
+    private void centerAllDialogs() {
+        // Center main window.
+        setLocation((screenSize.width - this.getWidth()) / 2, (screenSize.height - this.getHeight()) / 2);
+        // Center dialogs.
+        dotsDialog.setLocation((screenSize.width - dotsDialog.getWidth()) / 2, (screenSize.height - dotsDialog.getHeight()) / 2);
+        matrixPropertiesPrompt.setLocation((screenSize.width - matrixPropertiesPrompt.getWidth()) / 2, (screenSize.height - matrixPropertiesPrompt.getHeight()) / 2);
+        parenthesesTip.setLocation((screenSize.width - parenthesesTip.getWidth()) / 2, (screenSize.height - parenthesesTip.getHeight()) / 2);
+        integralDialog.setLocation((screenSize.width - integralDialog.getWidth()) / 2, (screenSize.height - integralDialog.getHeight()) / 2);
+        fractionDialog.setLocation((screenSize.width - fractionDialog.getWidth()) / 2, (screenSize.height - fractionDialog.getHeight()) / 2);
+        sumDialog.setLocation((screenSize.width - sumDialog.getWidth()) / 2, (screenSize.height - sumDialog.getHeight()) / 2);
+        setExportPathDialog.setLocation((screenSize.width - setExportPathDialog.getWidth()) / 2, (screenSize.height - setExportPathDialog.getHeight()) / 2);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton alephTex;
@@ -2559,12 +2747,12 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton bixXiTex;
     private javax.swing.JMenuItem boldTxtMathTex;
     private javax.swing.JButton boxTex;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JButton browseExportPathButton;
     private javax.swing.JButton capTex;
     private javax.swing.JButton chiTex;
     private javax.swing.JButton circTex;
     protected static javax.swing.JTextField columnsInMatrix;
+    private javax.swing.JButton confirmExportPathButton;
     private javax.swing.JMenuItem cosineTex;
     private javax.swing.JButton createMatrixConfirm;
     private javax.swing.JButton createMatrixTex;
@@ -2575,6 +2763,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton derivativeStg1Tex;
     private javax.swing.JButton derivativeStg2Tex;
     private javax.swing.JButton divTex;
+    private javax.swing.ButtonGroup dotsButtonGroup;
     private javax.swing.JDialog dotsDialog;
     private javax.swing.JButton dotsTex;
     private javax.swing.JButton downArrowTex;
@@ -2582,10 +2771,10 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton epsilonTex;
     private javax.swing.JButton etaTex;
     private javax.swing.JButton ethTex;
+    private javax.swing.JTextField exportPathField;
     private javax.swing.JButton fracTex;
     private javax.swing.JDialog fractionDialog;
     private javax.swing.JButton gammaTex;
-    private javax.swing.JDialog generalDialog;
     private javax.swing.JButton geqTex;
     private javax.swing.JButton gimelTex;
     private javax.swing.JButton hbarTex;
@@ -2671,20 +2860,22 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton kappaTex;
     private javax.swing.JButton lambdaTex;
     private javax.swing.JButton leqTex;
+    private javax.swing.ButtonGroup matrixAlignmentButtonGroup;
     protected static javax.swing.JDialog matrixBuilder;
     protected static javax.swing.JDialog matrixPropertiesPrompt;
     protected static javax.swing.JLabel msgBar;
     private javax.swing.JButton muTex;
     private javax.swing.JButton nablaTex;
     private javax.swing.JButton negationTex;
-    private NewJPanel newJPanel2;
     private javax.swing.JMenuItem nmlTxtMathTex;
     private javax.swing.JButton notequalTex;
     private javax.swing.JButton nuTex;
     private javax.swing.JButton omegaTex;
     private javax.swing.JButton omicronTex;
+    private javax.swing.JMenuItem openExportPathSettings;
     private javax.swing.JButton orTex;
     private javax.swing.JButton ovalBracketsTex;
+    private javax.swing.JDialog parenthesesTip;
     private javax.swing.JButton partialTex;
     private javax.swing.JButton phiTex;
     private javax.swing.JButton piTex;
@@ -2695,6 +2886,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton rhoTex;
     private javax.swing.JButton rootTex;
     protected static javax.swing.JTextField rowsInMatrix;
+    private javax.swing.JDialog setExportPathDialog;
+    private javax.swing.JMenu settingsMenu;
     private javax.swing.JButton sigmaTex;
     private javax.swing.JMenuItem sineTex;
     private javax.swing.JButton squareBracketsTex;
@@ -2702,6 +2895,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton sumTex;
     private javax.swing.JMenuItem tanTex;
     private javax.swing.JButton tauTex;
+    private TexDrawSurface texDrawSurface1;
     protected static javax.swing.JTextArea textPreview;
     private javax.swing.JButton thetaTex;
     private javax.swing.JButton timesTex;
